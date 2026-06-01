@@ -1,0 +1,137 @@
+{
+  "torque_wrench": {
+    "name_he": "מד מומנט",
+    "name_en": "Torque Wrench",
+    "ddg_image_query": "torque wrench tool click type photo",
+    "amazon_il_query": "מפתח מומנט",
+    "aliexpress_query": "torque wrench click type",
+    "price_range_ils": "150-400",
+    "note_he": "חיוני — בלעדיו אין לבצע החלפת שמן, בורגי גלגל, נרות הצתה"
+  },
+  "oil_filter_wrench": {
+    "name_he": "מפתח מסנן שמן",
+    "name_en": "Oil Filter Wrench",
+    "ddg_image_query": "oil filter wrench socket tool photo",
+    "amazon_il_query": "מפתח מסנן שמן",
+    "aliexpress_query": "oil filter wrench cap socket",
+    "price_range_ils": "20-80",
+    "note_he": "בדוק גודל מסנן לפי דגם הרכב (64mm, 74mm, 76mm…)"
+  },
+  "drain_pan": {
+    "name_he": "קערת ניקוז",
+    "name_en": "Oil Drain Pan",
+    "ddg_image_query": "oil drain pan container photo",
+    "amazon_il_query": "קערת ניקוז שמן",
+    "aliexpress_query": "oil drain pan catch tray",
+    "price_range_ils": "30-80",
+    "note_he": "נפח מינימום 5 ליטר"
+  },
+  "car_jack": {
+    "name_he": "ג'ק רכב",
+    "name_en": "Car Jack (Floor Jack)",
+    "ddg_image_query": "hydraulic floor jack car lift photo",
+    "amazon_il_query": "ג'ק רכב הידראולי",
+    "aliexpress_query": "hydraulic floor jack 2 ton",
+    "price_range_ils": "200-600",
+    "note_he": "בדוק יכולת הרמה לפי משקל הרכב (מינ' 2 טון)"
+  },
+  "jack_stands": {
+    "name_he": "מעמדי בטיחות (סוסים)",
+    "name_en": "Jack Stands",
+    "ddg_image_query": "jack stands pair car safety support photo",
+    "amazon_il_query": "מעמדי רכב סוסים",
+    "aliexpress_query": "jack stands 2 ton pair",
+    "price_range_ils": "80-200",
+    "note_he": "חובה — לעולם אל תכנס מתחת לרכב ללא מעמד בטיחות"
+  },
+  "lug_wrench": {
+    "name_he": "מפתח גלגל",
+    "name_en": "Lug Wrench",
+    "ddg_image_query": "lug wrench cross wheel nut photo",
+    "amazon_il_query": "מפתח גלגל צלב",
+    "aliexpress_query": "cross lug wrench wheel nut",
+    "price_range_ils": "30-100",
+    "note_he": "בדוק גודל מפתח (17mm, 19mm, 21mm) לפי בורגי הגלגל"
+  },
+  "spark_plug_socket": {
+    "name_he": "שקע נרות הצתה",
+    "name_en": "Spark Plug Socket",
+    "ddg_image_query": "spark plug socket with rubber insert 14mm 16mm 21mm photo",
+    "amazon_il_query": "שקע נרות הצתה",
+    "aliexpress_query": "spark plug socket rubber 14mm 16mm",
+    "price_range_ils": "20-60",
+    "note_he": "בדוק גודל נר לפי דגם (14mm / 16mm / 21mm) — עם אחיזת גומי"
+  },
+  "feeler_gauge": {
+    "name_he": "מד פתח (פיאלר גייג')",
+    "name_en": "Feeler Gauge",
+    "ddg_image_query": "feeler gauge thickness blade tool photo",
+    "amazon_il_query": "מד פתח",
+    "aliexpress_query": "feeler gauge set blade",
+    "price_range_ils": "15-50",
+    "note_he": "לכיוון פתח נר הצתה בדיוק מ\"מ"
+  },
+  "socket_set": {
+    "name_he": "ערכת שקעים",
+    "name_en": "Socket Set",
+    "ddg_image_query": "socket wrench set ratchet photo",
+    "amazon_il_query": "ערכת שקעים",
+    "aliexpress_query": "socket set ratchet wrench 1/2 3/8",
+    "price_range_ils": "150-500",
+    "note_he": "ערכה של 1/2 אינץ' לבלמים + 3/8 אינץ' לעבודות כלליות"
+  },
+  "c_clamp_piston": {
+    "name_he": "לחץ קליפר / כלי דחיפת פיסטון",
+    "name_en": "Brake Caliper Piston Tool",
+    "ddg_image_query": "brake caliper piston compressor rewind tool photo",
+    "amazon_il_query": "כלי קליפר בלמים",
+    "aliexpress_query": "brake caliper piston compressor tool",
+    "price_range_ils": "50-200",
+    "note_he": "לפיסטונים חד-כיווניים — C-Clamp. לפיסטונים מסתובבים — כלי Rewind"
+  },
+  "tire_pressure_gauge": {
+    "name_he": "מד לחץ צמיגים",
+    "name_en": "Tire Pressure Gauge",
+    "ddg_image_query": "tire pressure gauge digital photo",
+    "amazon_il_query": "מד לחץ צמיגים",
+    "aliexpress_query": "tire pressure gauge digital",
+    "price_range_ils": "20-80",
+    "note_he": "דיגיטלי מומלץ — דיוק 0.1 bar"
+  },
+  "wheel_chock": {
+    "name_he": "טריז גלגל",
+    "name_en": "Wheel Chock",
+    "ddg_image_query": "wheel chock rubber block safety photo",
+    "amazon_il_query": "טריז גלגל",
+    "aliexpress_query": "wheel chock rubber car",
+    "price_range_ils": "20-60",
+    "note_he": "נדרש לפני הרמת הרכב כדי למנוע גלגול"
+  },
+  "rubber_gloves": {
+    "name_he": "כפפות גומי",
+    "name_en": "Rubber / Nitrile Gloves",
+    "ddg_image_query": "nitrile mechanic gloves black photo",
+    "amazon_il_query": "כפפות ניטריל",
+    "aliexpress_query": "nitrile mechanic gloves oil resistant",
+    "price_range_ils": "15-40",
+    "note_he": "קופסת 100 כפפות ניטריל — עמידות לשמן ומסנני כימיקלים"
+  },
+  "screwdriver_set": {
+    "name_he": "מברגים (שטוח + פיליפס)",
+    "name_en": "Screwdriver Set",
+    "ddg_image_query": "screwdriver set flathead phillips photo",
+    "amazon_il_query": "ערכת מברגים",
+    "aliexpress_query": "screwdriver set phillips flathead",
+    "price_range_ils": "30-100",
+    "note_he": "לפתיחת כיסויים ותיבות אוויר"
+  },
+  "multimeter": {
+    "name_he": "מולטימטר",
+    "name_en": "Multimeter",
+    "ddg_image_query": "digital multimeter car battery test photo",
+    "amazon_il_query": "מולטימטר דיגיטלי",
+    "aliexpress_query": "digital multimeter auto range",
+    "price_range_ils": "50-200",
+    "note_he": "לבדיקת מצבר ומעגלים חשמליים"
+  }
+}

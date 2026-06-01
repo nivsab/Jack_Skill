@@ -1,0 +1,24 @@
+﻿make,model,year,engine,spec_type,value,unit,confidence,verified
+Mazda,CX-5,2019,2.0,engine_oil_type,0W-20,,llm,false
+Toyota,Corolla,2019,1.6,wheel_torque,74,Nm,llm,false
+Toyota,Corolla,2022,1.8 Hybrid,engine_oil_capacity,3.8,L,llm,false
+Toyota,Corolla,2022,1.8 Hybrid,oil_drain_plug_torque,30,Nm,llm,false
+Toyota,C-HR,2019,1.8 Hybrid,spark_plug_type,NGK ILFR6A-7S,,llm,false
+Toyota,Yaris,2020,1.5,engine_oil_type,0W-20,,llm,false
+Hyundai,i20,2018,1.4,oil_drain_plug_torque,32,Nm,llm,false
+Hyundai,i20,2018,1.4,spark_plug_type,NGK ILKAR7B7,,llm,false
+Hyundai,Elantra,2019,1.6,engine_oil_type,5W-20,,llm,false
+Hyundai,Elantra,2019,1.6,oil_drain_plug_torque,32,Nm,llm,false
+Kia,Picanto,2018,1.0,oil_drain_plug_torque,32,Nm,llm,false
+Kia,Ceed,2019,1.4T,engine_oil_type,5W-30,,llm,false
+Kia,Ceed,2019,1.4T,engine_oil_capacity,4.2,L,llm,false
+Mazda,3,2020,2.0,engine_oil_capacity,4.2,L,llm,false
+Mazda,CX-5,2019,2.0,spark_plug_type,NGK ILFR6A-7S,,llm,false
+Dacia,Duster,2020,1.6,engine_oil_type,5W-30,,llm,false
+Skoda,Octavia,2019,1.4 TSI,spark_plug_type,Bosch FR7KPP332S,,llm,false
+Volkswagen,Golf,2019,1.5 TSI,oil_drain_plug_torque,30,Nm,llm,false
+Suzuki,Swift,2019,1.2,engine_oil_type,0W-20,,llm,false
+Suzuki,Swift,2019,1.2,oil_drain_plug_torque,32,Nm,llm,false
+Suzuki,Swift,2019,1.2,spark_plug_type,NGK DILKAR7A11,,llm,false
+Honda,Civic,2019,1.5T,engine_oil_type,0W-20,,llm,false
+Honda,Civic,2019,1.5T,wheel_torque,110,Nm,llm,false

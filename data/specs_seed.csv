@@ -1,0 +1,87 @@
+make,model,year,engine,spec_type,value,unit,confidence,verified
+Toyota,Corolla,2019,1.6,engine_oil_type,5W-30,,llm,false
+Toyota,Corolla,2019,1.6,engine_oil_capacity,4.2,L,llm,false
+Toyota,Corolla,2019,1.6,oil_drain_plug_torque,33,Nm,llm,false
+Toyota,Corolla,2019,1.6,wheel_torque,103,Nm,llm,false
+Toyota,Corolla,2019,1.6,spark_plug_type,NGK DILKAR6A11,,llm,false
+Toyota,Corolla,2019,1.6,spark_plug_gap,0.8,mm,llm,false
+Toyota,Corolla,2022,1.8 Hybrid,engine_oil_type,0W-20,,llm,false
+Toyota,Corolla,2022,1.8 Hybrid,engine_oil_capacity,4.2,L,llm,false
+Toyota,Corolla,2022,1.8 Hybrid,oil_drain_plug_torque,33,Nm,llm,false
+Toyota,Corolla,2022,1.8 Hybrid,wheel_torque,103,Nm,llm,false
+Toyota,C-HR,2019,1.8 Hybrid,engine_oil_type,0W-20,,llm,false
+Toyota,C-HR,2019,1.8 Hybrid,engine_oil_capacity,4.2,L,llm,false
+Toyota,C-HR,2019,1.8 Hybrid,oil_drain_plug_torque,33,Nm,llm,false
+Toyota,C-HR,2019,1.8 Hybrid,wheel_torque,103,Nm,llm,false
+Toyota,RAV4,2020,2.0,engine_oil_type,0W-20,,llm,false
+Toyota,RAV4,2020,2.0,engine_oil_capacity,4.7,L,llm,false
+Toyota,RAV4,2020,2.0,oil_drain_plug_torque,40,Nm,llm,false
+Toyota,RAV4,2020,2.0,wheel_torque,103,Nm,llm,false
+Toyota,Yaris,2020,1.5,engine_oil_type,0W-20,,llm,false
+Toyota,Yaris,2020,1.5,engine_oil_capacity,3.4,L,llm,false
+Toyota,Yaris,2020,1.5,oil_drain_plug_torque,33,Nm,llm,false
+Toyota,Yaris,2020,1.5,wheel_torque,103,Nm,llm,false
+Hyundai,i20,2018,1.4,engine_oil_type,5W-30,,llm,false
+Hyundai,i20,2018,1.4,engine_oil_capacity,3.3,L,llm,false
+Hyundai,i20,2018,1.4,oil_drain_plug_torque,35,Nm,llm,false
+Hyundai,i20,2018,1.4,wheel_torque,80,Nm,llm,false
+Hyundai,i20,2018,1.4,spark_plug_type,NGK ILZKR7B-11,,llm,false
+Hyundai,Elantra,2019,1.6,engine_oil_type,5W-30,,llm,false
+Hyundai,Elantra,2019,1.6,engine_oil_capacity,3.3,L,llm,false
+Hyundai,Elantra,2019,1.6,oil_drain_plug_torque,35,Nm,llm,false
+Hyundai,Elantra,2019,1.6,wheel_torque,110,Nm,llm,false
+Hyundai,Elantra,2019,1.6,spark_plug_type,NGK ILZKR7B-11,,llm,false
+Hyundai,Tucson,2020,1.6T,engine_oil_type,5W-30,,llm,false
+Hyundai,Tucson,2020,1.6T,engine_oil_capacity,4.5,L,llm,false
+Hyundai,Tucson,2020,1.6T,oil_drain_plug_torque,35,Nm,llm,false
+Hyundai,Tucson,2020,1.6T,wheel_torque,130,Nm,llm,false
+Kia,Picanto,2018,1.0,engine_oil_type,5W-30,,llm,false
+Kia,Picanto,2018,1.0,engine_oil_capacity,2.5,L,llm,false
+Kia,Picanto,2018,1.0,oil_drain_plug_torque,35,Nm,llm,false
+Kia,Picanto,2018,1.0,wheel_torque,80,Nm,llm,false
+Kia,Sportage,2019,1.6T,engine_oil_type,5W-30,,llm,false
+Kia,Sportage,2019,1.6T,engine_oil_capacity,4.5,L,llm,false
+Kia,Sportage,2019,1.6T,oil_drain_plug_torque,35,Nm,llm,false
+Kia,Sportage,2019,1.6T,wheel_torque,130,Nm,llm,false
+Kia,Ceed,2019,1.4T,engine_oil_type,5W-30,,llm,false
+Kia,Ceed,2019,1.4T,engine_oil_capacity,4.0,L,llm,false
+Kia,Ceed,2019,1.4T,oil_drain_plug_torque,35,Nm,llm,false
+Kia,Ceed,2019,1.4T,wheel_torque,110,Nm,llm,false
+Mazda,3,2020,2.0,engine_oil_type,5W-30,,llm,false
+Mazda,3,2020,2.0,engine_oil_capacity,3.7,L,llm,false
+Mazda,3,2020,2.0,oil_drain_plug_torque,30,Nm,llm,false
+Mazda,3,2020,2.0,wheel_torque,108,Nm,llm,false
+Mazda,3,2020,2.0,spark_plug_type,NGK ILZKBR7B8DG,,llm,false
+Mazda,CX-5,2019,2.0,engine_oil_type,5W-30,,llm,false
+Mazda,CX-5,2019,2.0,engine_oil_capacity,4.7,L,llm,false
+Mazda,CX-5,2019,2.0,oil_drain_plug_torque,30,Nm,llm,false
+Mazda,CX-5,2019,2.0,wheel_torque,108,Nm,llm,false
+Dacia,Sandero,2020,1.0 TCe,engine_oil_type,5W-40,,llm,false
+Dacia,Sandero,2020,1.0 TCe,engine_oil_capacity,3.3,L,llm,false
+Dacia,Sandero,2020,1.0 TCe,oil_drain_plug_torque,25,Nm,llm,false
+Dacia,Sandero,2020,1.0 TCe,wheel_torque,105,Nm,llm,false
+Dacia,Duster,2020,1.6,engine_oil_type,5W-40,,llm,false
+Dacia,Duster,2020,1.6,engine_oil_capacity,4.4,L,llm,false
+Dacia,Duster,2020,1.6,oil_drain_plug_torque,25,Nm,llm,false
+Dacia,Duster,2020,1.6,wheel_torque,105,Nm,llm,false
+Skoda,Octavia,2019,1.4 TSI,engine_oil_type,5W-30,,llm,false
+Skoda,Octavia,2019,1.4 TSI,engine_oil_capacity,4.3,L,llm,false
+Skoda,Octavia,2019,1.4 TSI,oil_drain_plug_torque,30,Nm,llm,false
+Skoda,Octavia,2019,1.4 TSI,wheel_torque,120,Nm,llm,false
+Volkswagen,Golf,2019,1.5 TSI,engine_oil_type,5W-30 (VW 504/507),,llm,false
+Volkswagen,Golf,2019,1.5 TSI,engine_oil_capacity,4.1,L,llm,false
+Volkswagen,Golf,2019,1.5 TSI,oil_drain_plug_torque,25,Nm,llm,false
+Volkswagen,Golf,2019,1.5 TSI,wheel_torque,120,Nm,llm,false
+Suzuki,Swift,2019,1.2,engine_oil_type,5W-30,,llm,false
+Suzuki,Swift,2019,1.2,engine_oil_capacity,3.0,L,llm,false
+Suzuki,Swift,2019,1.2,oil_drain_plug_torque,35,Nm,llm,false
+Suzuki,Swift,2019,1.2,wheel_torque,85,Nm,llm,false
+Honda,Civic,2019,1.5T,engine_oil_type,0W-20,,llm,false
+Honda,Civic,2019,1.5T,engine_oil_capacity,3.7,L,llm,false
+Honda,Civic,2019,1.5T,oil_drain_plug_torque,39,Nm,llm,false
+Honda,Civic,2019,1.5T,wheel_torque,108,Nm,llm,false
+Honda,Civic,2019,1.5T,spark_plug_type,NGK DILZKR7C-11,,llm,false
+Nissan,Qashqai,2019,1.2T,engine_oil_type,5W-30,,llm,false
+Nissan,Qashqai,2019,1.2T,engine_oil_capacity,4.1,L,llm,false
+Nissan,Qashqai,2019,1.2T,oil_drain_plug_torque,35,Nm,llm,false
+Nissan,Qashqai,2019,1.2T,wheel_torque,108,Nm,llm,false
