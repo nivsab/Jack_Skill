@@ -79,14 +79,24 @@ _OPERATION_TITLE_KEYWORDS: dict[str, tuple[str, ...]] = {
 
 # מיפוי מילות מפתח עבריות לשם נורה ספציפי באנגלית (לשאילתת YouTube)
 _BULB_SUBTYPE: list[tuple[tuple[str, ...], str]] = [
-    (("רוורס", "גיבוי", "backup"), "reverse light"),
-    (("בלם", "stop light", "brake light"), "brake light"),
+    (("רוורס", "גיבוי", "backup", "reverse"), "reverse"),
+    (("בלם", "stop light", "brake light", "brake"), "brake light"),
     (("ערפל", "fog"), "fog light"),
     (("פנס", "הדלקה", "headlight", "קדמי", "קדמית"), "headlight"),
     (("אחורי", "זנב", "tail", "rear"), "tail light"),
     (("פלאש", "signal", "בלינקר", "רצועה"), "turn signal"),
     (("נורה", "bulb"), "bulb"),
 ]
+
+# מילות מפתח בכותרת שמאמתות שהסרטון אכן עוסק בסוג הנורה הנכון
+_BULB_SUBTYPE_TITLE_KEYWORDS: dict[str, tuple[str, ...]] = {
+    "reverse":      ("reverse", "backup", "back-up", "backing", "רוורס"),
+    "brake light":  ("brake light", "stop light", "tail light", "brake lamp", "בלם"),
+    "fog light":    ("fog", "ערפל"),
+    "headlight":    ("headlight", "head light", "low beam", "high beam", "פנס"),
+    "tail light":   ("tail light", "taillight", "rear light", "אחורי"),
+    "turn signal":  ("turn signal", "indicator", "blinker", "פלאש"),
+}
 
 
 def _extract_bulb_subtype(text: str) -> str:
@@ -230,12 +240,40 @@ _RHD_KEYWORDS = ("rhd", "right hand drive", "uk spec", "jdm", "japan spec", "aus
 _LHD_BONUS_KEYWORDS = ("lhd", "left hand drive", "europe", "european")
 
 
-def _tutorial_score(title: str, operation: str = "") -> int:
+def _year_score(title: str, target_year: int) -> int:
+    """
+    ניקוד לפי התאמת שנת הרכב לכותרת:
+      +3 טווח שנים שמכסה את השנה (2012-2017 covers 2016)
+      +2 שנה מדויקת בכותרת
+      -2 שנה שגויה בבירור (הפרש > 3 שנים)
+    """
+    if not target_year:
+        return 0
+    # Range patterns: "2012-2017", "2012 to 2017", "2012–2017"
+    for m in re.finditer(r'\b(20\d{2})\s*[-–to]+\s*(20\d{2})\b', title, re.IGNORECASE):
+        start, end = int(m.group(1)), int(m.group(2))
+        if start <= target_year <= end:
+            return 3
+        if abs(start - target_year) <= 2 or abs(end - target_year) <= 2:
+            return 1
+        return -1
+    # Exact year
+    years = [int(y) for y in re.findall(r'\b(20\d{2})\b', title)]
+    if target_year in years:
+        return 2
+    if years and all(abs(y - target_year) > 3 for y in years):
+        return -2
+    return 0
+
+
+def _tutorial_score(title: str, operation: str = "", subtype: Optional[str] = None, year: int = 0) -> int:
     """
     מחזיר ניקוד:
       +1 מילת הדרכה | -2 מילת ביקורת
       -3 RHD (UK/JDM) אם הפעולה תלוית-צד — ישראל LHD
       +1 LHD / Euro spec
+      +2 לכל מילת מפתח של subtype נורה שמופיעה בכותרת
+      ±  ניקוד שנה (year_score)
     """
     t = title.lower()
     score = sum(1 for kw in _TUTORIAL_KEYWORDS if kw in t)
@@ -243,19 +281,29 @@ def _tutorial_score(title: str, operation: str = "") -> int:
     if operation in _SIDE_SPECIFIC_OPERATIONS:
         score -= sum(3 for kw in _RHD_KEYWORDS if kw in t)
         score += sum(1 for kw in _LHD_BONUS_KEYWORDS if kw in t)
+    if subtype and subtype in _BULB_SUBTYPE_TITLE_KEYWORDS:
+        score += sum(2 for kw in _BULB_SUBTYPE_TITLE_KEYWORDS[subtype] if kw in t)
+    score += _year_score(title, year)
     return score
 
 
-def _is_relevant(title: str, operation: str) -> bool:
-    """מוודא שכותרת הסרטון רלוונטית לפעולה — לפחות מילת מפתח אחת חייבת להופיע."""
+def _is_relevant(title: str, operation: str, subtype: Optional[str] = None) -> bool:
+    """מוודא שכותרת הסרטון רלוונטית לפעולה ולסוג המשנה (אם צוין)."""
     kws = _OPERATION_TITLE_KEYWORDS.get(operation)
     if not kws:
-        return True  # אין אילוץ — קבל הכל
+        return True
     t = title.lower()
-    return any(kw in t for kw in kws)
+    if not any(kw in t for kw in kws):
+        return False
+    # לנורות עם subtype ספציפי — חובה שכותרת תכיל מילת מפתח של אותו subtype
+    if operation == "bulb" and subtype and subtype in _BULB_SUBTYPE_TITLE_KEYWORDS:
+        subtype_kws = _BULB_SUBTYPE_TITLE_KEYWORDS[subtype]
+        if not any(kw in t for kw in subtype_kws):
+            return False
+    return True
 
 
-def _search_ddg_video(query: str, operation: str = "") -> Optional[dict]:
+def _search_ddg_video(query: str, operation: str = "", subtype: Optional[str] = None, year: int = 0) -> Optional[dict]:
     """
     מחפש סרטוני YouTube דרך DuckDuckGo — fallback כשאין YouTube API key.
 
@@ -275,10 +323,10 @@ def _search_ddg_video(query: str, operation: str = "") -> Optional[dict]:
             if not vid_id:
                 continue
             title = r.get("title", "")
-            if not _is_relevant(title, operation):
+            if not _is_relevant(title, operation, subtype):
                 continue
             candidates.append((
-                _tutorial_score(title, operation),
+                _tutorial_score(title, operation, subtype, year),
                 {
                     "video_id":    vid_id,
                     "video_title": title,
@@ -300,11 +348,11 @@ def _search_ddg_video(query: str, operation: str = "") -> Optional[dict]:
         return None
 
 
-def _search_video(query: str, operation: str = "") -> Optional[dict]:
+def _search_video(query: str, operation: str = "", subtype: Optional[str] = None, year: int = 0) -> Optional[dict]:
     """
     מחפש סרטון — YouTube API אם זמין, DuckDuckGo אחרת.
     """
-    return _search_youtube_api(query) or _search_ddg_video(query, operation)
+    return _search_youtube_api(query) or _search_ddg_video(query, operation, subtype, year)
 
 
 def find_tutorial(vehicle: VehicleInfo, operation: str, raw_message: str = "") -> Optional[dict]:
@@ -324,36 +372,48 @@ def find_tutorial(vehicle: VehicleInfo, operation: str, raw_message: str = "") -
     # בנה שאילתות — עברית ואנגלית
     he_term = raw_message.strip() if raw_message else queries["he"]
     en_base = queries["en"]
+    year_int = int(year) if str(year).isdigit() else 0
 
-    # לנורות — שלוף סוג ספציפי (רוורס / פנס / בלם) לשיפור שאילתת אנגלית
-    if operation == "bulb" and raw_message:
-        subtype = _extract_bulb_subtype(raw_message)
-        en_specific = f"{make} {model} {year} {subtype} replacement"
-        en_fallback = f"{make} {model} {subtype}"
+    # לנורות — שלוף סוג ספציפי (רוורס / פנס / בלם) לשיפור שאילתה ו-cache key
+    if operation == "bulb":
+        subtype = _extract_bulb_subtype(raw_message) if raw_message else "bulb"
+        cache_operation = f"bulb_{subtype.replace(' ', '_')}"  # e.g. "bulb_reverse"
+        # שנה ראשונה + מרכאות סביב שם הדגם + "step by step" לאיתור מדויק
+        en_specific  = f'{year} {make} "{model}" {subtype} bulb replacement step by step'
+        en_fallback  = f'{make} "{model}" {subtype} bulb replacement'
+        en_fallback2 = f'how to replace {subtype} bulb {make} {model}'
     else:
-        en_specific = f"{make} {model} {year} {en_base}"
-        en_fallback = f"{make} {model} {en_base}"
+        subtype = None
+        cache_operation = operation
+        en_specific  = f'{year} {make} "{model}" {en_base} step by step'
+        en_fallback  = f'{make} "{model}" {en_base}'
+        en_fallback2 = None
 
-    # לפעולות תלויות-צד: הוסף "LHD" לשאילתה כדי לסנן סרטוני RHD (UK/JDM)
+    # לפעולות תלויות-צד: הוסף "LHD" לשאילתה הספציפית בלבד — fallback מכוון לרחב יותר
     if operation in _SIDE_SPECIFIC_OPERATIONS:
         en_specific = f"{en_specific} LHD"
-        en_fallback = f"{en_fallback} LHD"
 
-    # לכל שפה: שאילתה ספציפית לרכב (עם שנה) → ללא שנה
+    # לכל שפה: שאילתה ספציפית → fallback → fallback2
     # עברית קודמת — תוצאות ישראליות טבעיות
     search_pairs = [
-        ("he", f"{make} {model} {year} {he_term}", f"{make} {model} {he_term}"),
+        ("he", f"{year} {make} {model} {he_term}", f"{make} {model} {he_term}"),
         ("en", en_specific, en_fallback),
     ]
 
-    for lang, specific_q, fallback_q in search_pairs:
-        cached = _get_from_supabase(vehicle, operation, lang)
-        if cached:
-            return cached
+    bulb_subtype = subtype if operation == "bulb" else None
 
-        result = _search_video(specific_q, operation) or _search_video(fallback_q, operation)
+    for lang, specific_q, fallback_q in search_pairs:
+        cached = _get_from_supabase(vehicle, cache_operation, lang)
+        if cached:
+            # Validate cached title — rejects stale/wrong entries (e.g. headlight cached for reverse)
+            if _is_relevant(cached.get("video_title", ""), operation, bulb_subtype):
+                return cached
+
+        result = (_search_video(specific_q, operation, bulb_subtype, year_int)
+                  or _search_video(fallback_q, operation, bulb_subtype, year_int)
+                  or (en_fallback2 and lang == "en" and _search_video(en_fallback2, operation, bulb_subtype, year_int)))
         if result:
-            _save_to_supabase(vehicle, operation, lang, result)
+            _save_to_supabase(vehicle, cache_operation, lang, result)
             return result
 
     return None
@@ -431,7 +491,7 @@ def _cli_main():
             print(json.dumps({"found": False, "reason": "no relevant keywords"}))
             return
 
-        result = find_tutorial(vehicle, operation)
+        result = find_tutorial(vehicle, operation, raw_message=message)
         if result:
             print(json.dumps({"found": True, **result}, ensure_ascii=False))
         else:

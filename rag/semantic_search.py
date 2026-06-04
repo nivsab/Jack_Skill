@@ -93,11 +93,13 @@ def get_rag_context(query: str, match_count: int = 4) -> str:
         return ""
 
     lines = ["=== מסמכי מקור (RAG) ==="]
-    for r in results:
-        sim  = round(r.get("similarity", 0) * 100)
-        src  = r.get("source", "")
-        page = r.get("page", "")
-        lines.append(f"📄 {src} עמוד {page} (רלוונטיות {sim}%):")
+    for r in results.get("results", []):
+        sim   = round(r.get("similarity", 0) * 100)
+        src   = r.get("source", "")
+        page  = r.get("page", "")
+        bc    = r.get("breadcrumbs", "")
+        label = f"{src} p.{page}" + (f" › {bc}" if bc else "")
+        lines.append(f"📄 {label} ({sim}%):")
         lines.append(f"   {r.get('chunk', '')[:300]}")
     return "\n".join(lines)
 

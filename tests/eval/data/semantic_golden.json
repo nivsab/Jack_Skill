@@ -1,0 +1,72 @@
+[
+  {
+    "id": "sem_009",
+    "question": "What engine oil should I use for the Kia Rio?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["0W-20", "5W-20", "5W-30", "engine oil", "viscosity"]
+  },
+  {
+    "id": "sem_010",
+    "question": "What headlight bulb does the Kia Rio use?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["H11B", "H1", "headlight", "bulb", "low beam"]
+  },
+  {
+    "id": "sem_011",
+    "question": "What is the battery specification for the Kia Rio?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["850", "CCA", "battery", "90Ah", "90 Ah"]
+  },
+  {
+    "id": "sem_012",
+    "question": "What brake light bulb does the Kia Rio use?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["P28/8W", "P21W", "stop lamp", "brake light", "stop light", "bulb"]
+  },
+  {
+    "id": "sem_013",
+    "question": "What fog light bulb does the Kia Rio use?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["9006", "H8", "fog light", "fog lamp", "bulb"]
+  },
+  {
+    "id": "sem_014",
+    "question": "How do I reset the tire pressure monitoring system on the Kia Rio?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["TPMS", "tire pressure", "reset", "warning light"]
+  },
+  {
+    "id": "sem_015",
+    "question": "What should I do when the check engine light comes on in the Kia Rio?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["check engine", "malfunction indicator", "OBD", "service", "dealer"]
+  },
+  {
+    "id": "sem_016",
+    "question": "What brake fluid type does the Kia Rio require?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["DOT 3", "DOT 4", "DOT3", "brake fluid", "brake/clutch", "clutch fluid"]
+  },
+  {
+    "id": "sem_017",
+    "question": "What type of coolant should I use for the Kia Rio?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["antifreeze", "coolant", "ethylene-glycol"]
+  },
+  {
+    "id": "sem_018",
+    "question": "What is the recommended tire inflation pressure for the Kia Rio?",
+    "vehicle": {"make": "Kia", "model": "Rio", "year": 2016},
+    "source_pdf": "Rio-SC-2016.pdf",
+    "must_contain_any": ["tire pressure", "inflation", "kPa", "psi", "bar"]
+  }
+]

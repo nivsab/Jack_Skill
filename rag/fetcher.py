@@ -104,6 +104,86 @@ SPEC_META: dict[str, dict] = {
         "query_en": "brake light bulb type specification",
         "unit":     "",
     },
+    "backup_light_bulb": {
+        "display":  "נורת רוורס (Back-up)",
+        "query_en": "backup reverse light bulb type specification",
+        "unit":     "",
+    },
+    "turn_signal_rear_bulb": {
+        "display":  "נורת פלאש אחורי",
+        "query_en": "rear turn signal bulb type specification",
+        "unit":     "",
+    },
+    "parking_light_bulb": {
+        "display":  "נורת עמידה קדמית",
+        "query_en": "front parking position light bulb type specification",
+        "unit":     "",
+    },
+    "license_plate_bulb": {
+        "display":  "נורת לוחית רישוי",
+        "query_en": "license plate light bulb type specification",
+        "unit":     "",
+    },
+    "rear_fog_light_bulb": {
+        "display":  "נורת ערפל אחורי",
+        "query_en": "rear fog light bulb type specification",
+        "unit":     "",
+    },
+    "interior_dome_bulb": {
+        "display":  "נורת תאורה פנימית (גג)",
+        "query_en": "interior dome map reading light bulb type specification",
+        "unit":     "",
+    },
+    "wiper_front_driver_mm": {
+        "display":  "מגב קדמי — צד נהג",
+        "query_en": "front driver wiper blade size mm specification",
+        "unit":     "mm",
+    },
+    "wiper_front_passenger_mm": {
+        "display":  "מגב קדמי — צד נוסע",
+        "query_en": "front passenger wiper blade size mm specification",
+        "unit":     "mm",
+    },
+    "wiper_rear_mm": {
+        "display":  "מגב אחורי",
+        "query_en": "rear wiper blade size mm specification",
+        "unit":     "mm",
+    },
+    "engine_air_filter": {
+        "display":  "מסנן אוויר מנוע",
+        "query_en": "engine air filter part number OEM size specification",
+        "unit":     "",
+    },
+    "cabin_air_filter": {
+        "display":  "מסנן אוויר קבינה (מזגן)",
+        "query_en": "cabin pollen air filter part number OEM size specification",
+        "unit":     "",
+    },
+    "tire_size_front": {
+        "display":  "מידת צמיג קדמי",
+        "query_en": "front tire size specification OEM",
+        "unit":     "",
+    },
+    "tire_pressure_front": {
+        "display":  "לחץ צמיג קדמי",
+        "query_en": "front tire inflation pressure bar kPa PSI specification",
+        "unit":     "bar",
+    },
+    "tire_pressure_rear": {
+        "display":  "לחץ צמיג אחורי",
+        "query_en": "rear tire inflation pressure bar kPa PSI specification",
+        "unit":     "bar",
+    },
+    "coolant_capacity_liters": {
+        "display":  "כמות נוזל קירור",
+        "query_en": "coolant system capacity liters specification",
+        "unit":     "L",
+    },
+    "battery_group_size": {
+        "display":  "קוד מצבר (DIN/BCI)",
+        "query_en": "battery group size DIN BCI OEM specification",
+        "unit":     "",
+    },
 }
 
 

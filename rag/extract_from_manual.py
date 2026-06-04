@@ -100,6 +100,75 @@ SPEC_KEYWORDS: dict[str, list[str]] = {
         "caliper bolt", "caliper torque", "brake caliper", "caliper mounting",
         "sliding pin torque",
     ],
+    # ── נורות נוספות ───────────────────────────────────────────────────────────
+    "backup_light_bulb": [
+        "backup lamp", "reverse lamp", "back-up lamp", "backup light bulb",
+        "reverse light bulb", "W16W",
+    ],
+    "turn_signal_rear_bulb": [
+        "rear turn signal", "rear indicator lamp", "rear blinker",
+        "rear flasher bulb", "rear combination lamp turn",
+    ],
+    "parking_light_bulb": [
+        "position lamp", "parking light bulb", "position light",
+        "front position", "side marker", "W5W",
+    ],
+    "license_plate_bulb": [
+        "license plate lamp", "license plate light", "number plate lamp",
+        "registration plate lamp",
+    ],
+    "rear_fog_light_bulb": [
+        "rear fog lamp", "rear fog light", "fog rear",
+    ],
+    "interior_dome_bulb": [
+        "room lamp", "dome light", "map lamp", "interior lamp",
+        "ceiling light", "overhead light", "FESTON",
+    ],
+    # ── מגבים ──────────────────────────────────────────────────────────────────
+    "wiper_front_driver_mm": [
+        "driver wiper", "front wiper blade", "windshield wiper blade",
+        "wiper blade size", "wiper blade length",
+    ],
+    "wiper_front_passenger_mm": [
+        "passenger wiper", "front passenger wiper blade",
+        "wiper blade size", "wiper blade length",
+    ],
+    "wiper_rear_mm": [
+        "rear wiper blade", "rear window wiper", "rear wiper length",
+        "rear wiper size",
+    ],
+    # ── מסננים ─────────────────────────────────────────────────────────────────
+    "engine_air_filter": [
+        "air cleaner element", "air filter element", "air filter replacement",
+        "engine air filter", "air cleaner filter",
+    ],
+    "cabin_air_filter": [
+        "cabin air filter", "climate control air filter", "pollen filter",
+        "cabin filter replacement", "AC filter", "ventilation filter",
+    ],
+    # ── צמיגים ─────────────────────────────────────────────────────────────────
+    "tire_size_front": [
+        "tire size", "tyre size", "P185", "P195", "P205", "P215", "P225",
+        "185/", "195/", "205/", "215/", "recommended tire",
+    ],
+    "tire_pressure_front": [
+        "inflation pressure", "tire inflation", "cold tire pressure",
+        "tire pressure front", "recommended pressure", "psi", "kPa",
+    ],
+    "tire_pressure_rear": [
+        "inflation pressure", "tire inflation", "cold tire pressure",
+        "tire pressure rear", "recommended pressure", "psi", "kPa",
+    ],
+    # ── קירור ──────────────────────────────────────────────────────────────────
+    "coolant_capacity_liters": [
+        "coolant capacity", "coolant volume", "cooling system capacity",
+        "antifreeze capacity", "coolant refill",
+    ],
+    # ── מצבר ───────────────────────────────────────────────────────────────────
+    "battery_group_size": [
+        "battery group", "DIN battery", "battery specification", "battery type",
+        "12V battery group", "battery size",
+    ],
 }
 
 # prompt hint per spec_type (unit + format guidance for Groq)
@@ -120,8 +189,24 @@ _SPEC_HINTS: dict[str, str] = {
     "headlight_high_beam_bulb":"Bulb type code (e.g. H1, H7, LED). Code only.",
     "fog_light_front_bulb":    "Bulb type code (e.g. H8, H11, LED). Code only.",
     "turn_signal_front_bulb":  "Bulb type code (e.g. P21W, WY21W). Code only.",
-    "brake_light_bulb":        "Bulb type code (e.g. P21W, W21W). Code only.",
-    "brake_caliper_torque":    "Bolt torque in Nm (e.g. 25). Convert ft-lb→Nm if needed.",
+    "brake_light_bulb":           "Bulb type code (e.g. P21W, W21W). Code only.",
+    "brake_caliper_torque":       "Bolt torque in Nm (e.g. 25). Convert ft-lb→Nm if needed.",
+    "backup_light_bulb":          "Bulb type code (e.g. W16W, P21W). Code only.",
+    "turn_signal_rear_bulb":      "Bulb type code (e.g. PY21W, P21W). Code only.",
+    "parking_light_bulb":         "Bulb type code (e.g. W5W, T10, P21/5W). Code only.",
+    "license_plate_bulb":         "Bulb type code (e.g. W5W, C5W). Code only.",
+    "rear_fog_light_bulb":        "Bulb type code (e.g. P21W, W21W, LED). Code only.",
+    "interior_dome_bulb":         "Bulb type code (e.g. FESTON, W5W, SV8.5). Code only.",
+    "wiper_front_driver_mm":      "Length in mm as integer (e.g. 650). Number only.",
+    "wiper_front_passenger_mm":   "Length in mm as integer (e.g. 400). Number only.",
+    "wiper_rear_mm":              "Length in mm as integer (e.g. 300). Number only.",
+    "engine_air_filter":          "OEM part number or code (e.g. 28113-1G000). Code only.",
+    "cabin_air_filter":           "OEM part number or code (e.g. 97133-1G000). Code only.",
+    "tire_size_front":            "Full tire size code (e.g. 185/65R15, 205/55R16). Size only.",
+    "tire_pressure_front":        "Pressure in bar (e.g. 2.3). Convert: PSI÷14.504 or kPa÷100. Number only.",
+    "tire_pressure_rear":         "Pressure in bar (e.g. 2.3). Convert: PSI÷14.504 or kPa÷100. Number only.",
+    "coolant_capacity_liters":    "Capacity in liters (e.g. 5.5). Convert US qt×0.946 if needed. Number only.",
+    "battery_group_size":         "Battery group/DIN code (e.g. DIN 60, L2, Group 47). Code only.",
 }
 
 _SPEC_UNITS: dict[str, str] = {
@@ -134,6 +219,13 @@ _SPEC_UNITS: dict[str, str] = {
     "headlight_low_beam_bulb": "", "headlight_high_beam_bulb": "",
     "fog_light_front_bulb": "", "turn_signal_front_bulb": "",
     "brake_light_bulb": "", "brake_caliper_torque": "Nm",
+    "backup_light_bulb": "", "turn_signal_rear_bulb": "",
+    "parking_light_bulb": "", "license_plate_bulb": "",
+    "rear_fog_light_bulb": "", "interior_dome_bulb": "",
+    "wiper_front_driver_mm": "mm", "wiper_front_passenger_mm": "mm", "wiper_rear_mm": "mm",
+    "engine_air_filter": "", "cabin_air_filter": "",
+    "tire_size_front": "", "tire_pressure_front": "bar", "tire_pressure_rear": "bar",
+    "coolant_capacity_liters": "L", "battery_group_size": "",
 }
 
 GROQ_MODEL = "llama-3.3-70b-versatile"
@@ -278,6 +370,19 @@ def _post_process(spec_type: str, value: str, unit: str) -> tuple[str, str]:
             if nums:
                 km_val = round(float(nums[0]) * 1.609)
                 return str(km_val), "km"
+
+    if spec_type in ("tire_pressure_front", "tire_pressure_rear"):
+        u = unit.lower().replace(" ", "")
+        nums = re.findall(r"[\d.]+", value)
+        if nums:
+            first = float(nums[0])
+            if "psi" in u or (not u and first > 10):
+                bar_val = round(first / 14.504, 2)
+                return str(bar_val), "bar"
+            if "kpa" in u or (not u and first > 100):
+                bar_val = round(first / 100, 2)
+                return str(bar_val), "bar"
+        return value, "bar"
 
     return value, unit
 

@@ -1,20 +1,20 @@
 """
-rag/ingest.py — פייפליין RAG: PDF → chunks → embeddings → Supabase.
+rag/ingest.py — PDF → structured chunks → embeddings → Supabase.
 
-תהליך:
-  1. קרא PDF מ-data/manuals/
-  2. חתוך לחלקים (chunking) — 400 תווים, חפיפה 80
-  3. צור embedding לכל chunk דרך Ollama (nomic-embed-text)
-  4. העלה ל-Supabase טבלת doc_chunks
+Pipeline:
+  1. Extract via DocumentExtractor (headings, tables, paragraphs)
+  2. Embed each chunk via Ollama (nomic-embed-text)
+  3. Upload to Supabase doc_chunks
 
-דרישות:
-  - Ollama רץ מקומית עם nomic-embed-text:
-      ollama pull nomic-embed-text
-  - SUPABASE_URL + SUPABASE_KEY ב-.env
+Requirements:
+  - Ollama running locally: ollama pull nomic-embed-text
+  - SUPABASE_URL + SUPABASE_KEY in .env
+  - SUPABASE_SERVICE_KEY in .env (required for --force delete)
 
 CLI:
-  python rag/ingest.py data/manuals/prius.pdf
-  python rag/ingest.py data/manuals/  (כל קבצי ה-PDF בתיקייה)
+  python rag/ingest.py data/manuals/Rio-SC-2016.pdf
+  python rag/ingest.py data/manuals/          # all PDFs in directory
+  python rag/ingest.py data/manuals/Rio-SC-2016.pdf --force
 """
 import json
 import os
@@ -25,127 +25,58 @@ from pathlib import Path
 
 warnings.filterwarnings("ignore")
 
-# Windows encoding fix
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from dotenv import load_dotenv
-
 load_dotenv()
 
-OLLAMA_URL   = "http://localhost:11434/api/embeddings"
-EMBED_MODEL  = "nomic-embed-text"
-CHUNK_SIZE    = 400   # תווים
-CHUNK_OVERLAP = 150   # חפיפה — גדולה יותר כדי לא לחתוך הקשר
+from rag.extractor import DocumentExtractor
+
+OLLAMA_URL  = "http://localhost:11434/api/embeddings"
+EMBED_MODEL = "nomic-embed-text"
+BATCH_SIZE  = 25
 
 
-# ─── PDF → טקסט ───────────────────────────────────────────────────────────────
-
-def _extract_pages(pdf_path: Path) -> list[tuple[int, str]]:
-    """
-    מחלץ טקסט לפי עמוד דרך pdfplumber.
-    pdfplumber מצוין לטבלאות — מחלץ אותן כטקסט מסודר בשורות.
-    fallback ל-pypdf אם pdfplumber נכשל בעמוד ספציפי.
-    מחזיר [(page_num, text), ...].
-    """
-    import pdfplumber
-    from pypdf import PdfReader
-
-    pages = []
-    try:
-        with pdfplumber.open(str(pdf_path)) as pdf:
-            for i, page in enumerate(pdf.pages, start=1):
-                # חילוץ טבלאות כטקסט מסודר
-                tables_text = ""
-                for table in (page.extract_tables() or []):
-                    for row in table:
-                        line = " | ".join(str(cell or "").strip() for cell in row if cell)
-                        if line.strip():
-                            tables_text += line + "\n"
-
-                # טקסט רגיל
-                body_text = page.extract_text(x_tolerance=2, y_tolerance=2) or ""
-
-                combined = f"{body_text}\n{tables_text}".strip()
-                if combined:
-                    pages.append((i, combined))
-    except Exception:
-        # fallback: pypdf
-        reader = PdfReader(str(pdf_path))
-        for i, page in enumerate(reader.pages, start=1):
-            text = (page.extract_text() or "").strip()
-            if text:
-                pages.append((i, text))
-
-    return pages
-
-
-# ─── Chunking ─────────────────────────────────────────────────────────────────
-
-def _chunk_text(text: str) -> list[str]:
-    """חותך טקסט ל-chunks עם חפיפה."""
-    chunks = []
-    start = 0
-    while start < len(text):
-        end = start + CHUNK_SIZE
-        chunks.append(text[start:end].strip())
-        start += CHUNK_SIZE - CHUNK_OVERLAP
-    return [c for c in chunks if len(c) > 30]  # סינון chunks קצרים מדי
-
-
-# ─── Ollama Embedding ──────────────────────────────────────────────────────────
+# ─── Embedding ────────────────────────────────────────────────────────────────
 
 def _embed(text: str) -> list[float] | None:
-    """שולח טקסט ל-Ollama ומחזיר וקטור 768 ממדים."""
     try:
         body = json.dumps({"model": EMBED_MODEL, "prompt": text}).encode()
         req  = urllib.request.Request(
-            OLLAMA_URL,
-            data=body,
+            OLLAMA_URL, data=body,
             headers={"Content-Type": "application/json"},
         )
         with urllib.request.urlopen(req, timeout=15) as resp:
             return json.loads(resp.read())["embedding"]
     except Exception as e:
-        print(f"  ⚠️  embedding נכשל: {e}", flush=True)
+        print(f"  ⚠️  embedding failed: {e}", flush=True)
         return None
 
 
-# ─── Supabase Upload ──────────────────────────────────────────────────────────
+# ─── Supabase client ──────────────────────────────────────────────────────────
 
-def _get_client():
+def _get_client(admin: bool = False):
     from supabase import create_client
     url = os.getenv("SUPABASE_URL", "")
-    key = os.getenv("SUPABASE_KEY", "")
+    key = (
+        os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
+        if admin else
+        os.getenv("SUPABASE_KEY", "")
+    )
     if not url or not key:
-        raise RuntimeError("חסרים SUPABASE_URL / SUPABASE_KEY ב-.env")
+        raise RuntimeError("Missing SUPABASE_URL / SUPABASE_KEY in .env")
     return create_client(url, key)
 
 
-def _upload_chunks(client, source: str, rows: list[dict], batch_size: int = 100) -> int:
-    """מעלה את ה-chunks ל-Supabase בבאצ'ים. מחזיר מספר שורות שהועלו."""
-    if not rows:
-        return 0
-    uploaded = 0
-    for i in range(0, len(rows), batch_size):
-        batch = rows[i : i + batch_size]
-        client.table("doc_chunks").insert(batch).execute()
-        uploaded += len(batch)
-        print(f"  📤 הועלו {uploaded}/{len(rows)} chunks", end="\r", flush=True)
-    return uploaded
+# ─── Ingest pipeline ──────────────────────────────────────────────────────────
 
-
-# ─── פייפליין ראשי ────────────────────────────────────────────────────────────
-
-def ingest_pdf(pdf_path: Path, client) -> int:
-    """
-    מעבד קובץ PDF אחד מקצה לקצה.
-    מחזיר מספר ה-chunks שהועלו.
-    """
+def ingest_pdf(pdf_path: Path, force: bool = False) -> int:
     source = pdf_path.name
-    print(f"\n📄 מעבד: {source}", flush=True)
+    client = _get_client(admin=force)
 
-    # בדוק שלא כבר קיים
+    print(f"\n📄 Processing: {source}", flush=True)
+
     existing = (
         client.table("doc_chunks")
         .select("id", count="exact")
@@ -153,65 +84,80 @@ def ingest_pdf(pdf_path: Path, client) -> int:
         .execute()
     )
     if existing.count and existing.count > 0:
-        print(f"  ⏭️  כבר קיים ב-DB ({existing.count} chunks) — מדלג.", flush=True)
+        if not force:
+            print(f"  ⏭️  Already in DB ({existing.count} chunks). Use --force to re-ingest.", flush=True)
+            return 0
+        print(f"  🗑️  Deleting {existing.count} existing chunks...", flush=True)
+        client.table("doc_chunks").delete().eq("source", source).execute()
+
+    print("  🔍 Extracting structured chunks...", flush=True)
+    extractor = DocumentExtractor(pdf_path)
+    chunks    = extractor.extract()
+    print(f"  📋 {len(chunks)} chunks extracted (body font: {extractor._body_font_size:.1f}pt)", flush=True)
+
+    if not chunks:
+        print("  ⚠️  No chunks produced — check PDF encoding.", flush=True)
         return 0
 
-    pages = _extract_pages(pdf_path)
-    if not pages:
-        print("  ⚠️  לא נמצא טקסט ב-PDF.", flush=True)
-        return 0
+    rows: list[dict] = []
+    skipped = 0
+    for i, chunk in enumerate(chunks):
+        embedding = _embed(chunk.content)
+        if embedding is None:
+            skipped += 1
+            continue
+        rows.append({
+            "source":      chunk.source,
+            "page":        chunk.page,
+            "chunk_idx":   i,
+            "chunk":       chunk.content,
+            "breadcrumbs": chunk.breadcrumbs,
+            "chunk_type":  chunk.chunk_type,
+            "embedding":   embedding,
+        })
+        print(f"  ✅ Embedded {i + 1}/{len(chunks)}", end="\r", flush=True)
 
-    print(f"  📖 {len(pages)} עמודים עם טקסט", flush=True)
+    if skipped:
+        print(f"\n  ⚠️  Skipped {skipped} chunks (embedding failed)", flush=True)
 
-    rows = []
-    for page_num, text in pages:
-        chunks = _chunk_text(text)
-        for chunk_idx, chunk in enumerate(chunks):
-            embedding = _embed(chunk)
-            if embedding is None:
-                continue
-            rows.append({
-                "source":    source,
-                "page":      page_num,
-                "chunk_idx": chunk_idx,
-                "chunk":     chunk,
-                "embedding": embedding,
-            })
-            print(f"  ✅ עמוד {page_num} chunk {chunk_idx+1}/{len(chunks)}", end="\r", flush=True)
+    uploaded = 0
+    for i in range(0, len(rows), BATCH_SIZE):
+        batch = rows[i : i + BATCH_SIZE]
+        client.table("doc_chunks").insert(batch).execute()
+        uploaded += len(batch)
+        print(f"  📤 Uploaded {uploaded}/{len(rows)}", end="\r", flush=True)
 
-    uploaded = _upload_chunks(client, source, rows)
-    print(f"\n  🚀 הועלו {uploaded} chunks ל-Supabase.", flush=True)
+    print(f"\n  🚀 Done: {uploaded} chunks uploaded to Supabase.", flush=True)
     return uploaded
 
 
-def ingest_all(path: Path) -> None:
-    """מעבד קובץ אחד או כל קבצי PDF בתיקייה."""
-    client = _get_client()
-
+def ingest_all(path: Path, force: bool = False) -> None:
     if path.is_file():
         pdfs = [path]
     elif path.is_dir():
         pdfs = sorted(path.glob("*.pdf"))
         if not pdfs:
-            print(f"לא נמצאו קבצי PDF ב-{path}")
+            print(f"No PDF files found in {path}")
             return
     else:
-        print(f"נתיב לא קיים: {path}")
+        print(f"Path does not exist: {path}")
         return
 
     total = 0
     for pdf in pdfs:
-        total += ingest_pdf(pdf, client)
+        total += ingest_pdf(pdf, force=force)
 
-    print(f"\n✅ סה\"כ: {total} chunks הועלו ל-Supabase.")
+    print(f"\n✅ Total: {total} chunks uploaded.")
 
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("שימוש: python rag/ingest.py <קובץ.pdf | תיקייה>")
+    args  = [a for a in sys.argv[1:] if not a.startswith("-")]
+    force = "--force" in sys.argv
+
+    if not args:
+        print("Usage: python rag/ingest.py <file.pdf | directory> [--force]")
         sys.exit(1)
 
-    target = Path(sys.argv[1])
-    ingest_all(target)
+    ingest_all(Path(args[0]), force=force)

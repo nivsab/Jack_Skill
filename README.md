@@ -16,7 +16,7 @@ Most car AI tools either hallucinate specs or push everything toward "go to a me
 
 - **Vehicle identification** — looks up any Israeli-registered vehicle by plate number (free government API, no key required)
 - **Diagnostics** — warning lights, noises, and symptoms with actionable next steps
-- **DIY guidance** — step-by-step instructions with tools, torque specs, and a YouTube tutorial
+- **DIY guidance** — step-by-step instructions with tools, torque specs, and a YouTube tutorial matched to your exact make, model, and year
 - **Parts pricing** — real-time comparison between Israeli retailers and AliExpress
 - **RAG from manufacturer manuals** — semantic search over your car's PDF manual via Ollama + Supabase
 - **Mechanic Script** — a scripted briefing to bring to the garage
@@ -134,7 +134,7 @@ VALUES ('Toyota', 'Corolla', 2019, 2023, '1.8', 'corolla-2019-manual.pdf');
 
 Jack will now retrieve relevant chunks from that manual when answering questions about matching vehicles.
 
-> Two manuals are included out of the box: **Toyota Yaris Hybrid (2019–2020)** and **Kia Rio (2017)**. Run `migrations/001_vehicle_manuals.sql` to register them.
+> One manual is included out of the box: **Kia Rio (2016)**. Run `migrations/001_vehicle_manuals.sql` to register it.
 
 ---
 
@@ -153,6 +153,6 @@ python main.py
 | Claude / GPT-4o / Gemini | Conversation engine |
 | Supabase + pgvector | Spec cache + semantic search |
 | Ollama (`nomic-embed-text`) | Local embeddings for RAG |
-| DuckDuckGo | Parts prices + YouTube video search |
+| DuckDuckGo | Parts prices + YouTube video search (year-aware, subtype-filtered) |
 | data.gov.il API | Vehicle lookup by Israeli plate number |
 | Groq | Fast spec seeding |

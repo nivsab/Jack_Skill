@@ -1,0 +1,224 @@
+[
+  {
+    "id": "ret_001",
+    "make": "Toyota", "model": "Yaris", "year": 2019, "engine": "1.5 Hybrid",
+    "query": "what engine oil should I use?",
+    "expected_spec_type": "engine_oil_type",
+    "expected_value": "0W-20",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_002",
+    "make": "Toyota", "model": "Yaris", "year": 2019, "engine": "1.5 Hybrid",
+    "query": "what spark plug does this car use?",
+    "expected_spec_type": "spark_plug_type",
+    "expected_value": "DENSO FK16R",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_003",
+    "make": "Toyota", "model": "Yaris", "year": 2019, "engine": "1.5 Hybrid",
+    "query": "what brake fluid should I use?",
+    "expected_spec_type": "brake_fluid_type",
+    "expected_value": "DOT 3",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_004",
+    "make": "Toyota", "model": "Yaris", "year": 2019, "engine": "1.5 Hybrid",
+    "query": "what coolant does this car use?",
+    "expected_spec_type": "coolant_type",
+    "expected_value": "Toyota Super Long Life Coolant",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_005",
+    "make": "Toyota", "model": "Yaris", "year": 2019, "engine": "1.5 Hybrid",
+    "query": "what bulb for high beam headlights?",
+    "expected_spec_type": "headlight_high_beam_bulb",
+    "expected_value": "HIR2",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_006",
+    "make": "Toyota", "model": "Yaris", "year": 2019, "engine": "1.5 Hybrid",
+    "query": "what bulb for front fog lights?",
+    "expected_spec_type": "fog_light_front_bulb",
+    "expected_value": "H16",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_007",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what engine oil should I use?",
+    "expected_spec_type": "engine_oil_type",
+    "expected_value": "0W-20",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_008",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what is the battery capacity?",
+    "expected_spec_type": "battery_capacity_ah",
+    "expected_value": "90",
+    "unit": "Ah",
+    "tolerance": 5,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_009",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what is the battery CCA rating?",
+    "expected_spec_type": "battery_cca",
+    "expected_value": "850",
+    "unit": "CCA",
+    "tolerance": 50,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_010",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what bulb for low beam headlights?",
+    "expected_spec_type": "headlight_low_beam_bulb",
+    "expected_value": "H7",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": true,
+    "note": "changed H4→H7 on re-extraction — verify against PDF page"
+  },
+  {
+    "id": "ret_011",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what bulb for high beam headlights?",
+    "expected_spec_type": "headlight_high_beam_bulb",
+    "expected_value": "HB4",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_012",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what bulb for front fog lights?",
+    "expected_spec_type": "fog_light_front_bulb",
+    "expected_value": "H8",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_013",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what bulb for front turn signals?",
+    "expected_spec_type": "turn_signal_front_bulb",
+    "expected_value": "P21W",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_014",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.0T",
+    "query": "what bulb for brake lights?",
+    "expected_spec_type": "brake_light_bulb",
+    "expected_value": "P21W",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_015",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what engine oil should I use?",
+    "expected_spec_type": "engine_oil_type",
+    "expected_value": "5W-20",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": true,
+    "note": "changed 0W-20→5W-20 on re-extraction — verify against PDF page"
+  },
+  {
+    "id": "ret_016",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what is the battery capacity?",
+    "expected_spec_type": "battery_capacity_ah",
+    "expected_value": "90",
+    "unit": "Ah",
+    "tolerance": 5,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_017",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what is the battery CCA rating?",
+    "expected_spec_type": "battery_cca",
+    "expected_value": "850",
+    "unit": "CCA",
+    "tolerance": 50,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_018",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what bulb for low beam headlights?",
+    "expected_spec_type": "headlight_low_beam_bulb",
+    "expected_value": "H4",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_019",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what bulb for high beam headlights?",
+    "expected_spec_type": "headlight_high_beam_bulb",
+    "expected_value": "HB4",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_020",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what bulb for front fog lights?",
+    "expected_spec_type": "fog_light_front_bulb",
+    "expected_value": "H8",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_021",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what bulb for front turn signals?",
+    "expected_spec_type": "turn_signal_front_bulb",
+    "expected_value": "P21W",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  },
+  {
+    "id": "ret_022",
+    "make": "Kia", "model": "Rio", "year": 2020, "engine": "1.4",
+    "query": "what bulb for brake lights?",
+    "expected_spec_type": "brake_light_bulb",
+    "expected_value": "P21W",
+    "unit": "",
+    "tolerance": null,
+    "needs_verification": false
+  }
+]

@@ -10,9 +10,14 @@ CLI: python rag/retriever.py <make> <model> <year> <message>
 import json
 import sys
 import warnings
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
 warnings.filterwarnings("ignore")
 
 from typing import Optional
+from dotenv import load_dotenv
+load_dotenv()
 
 from state import VehicleInfo
 from rag import cache
@@ -22,34 +27,89 @@ from rag.fetcher import SPEC_META
 # ─── מיפוי מילות מפתח → spec_types ──────────────────────────────────────────
 
 _KEYWORD_SPEC_MAP: list[tuple[tuple[str, ...], list[str]]] = [
+    # ── שמן ──────────────────────────────────────────────────────────────────
     (
         ("שמן", "oil", "מסנן שמן", "oil filter", "החלפת שמן", "פקק"),
         ["oil_drain_plug_torque", "engine_oil_type", "engine_oil_capacity", "oil_change_interval"],
     ),
+    # ── גלגלים / צמיגים ──────────────────────────────────────────────────────
     (
-        ("גלגל", "צמיג", "wheel", "tire", "גלגלים", "בורגי גלגל"),
-        ["wheel_torque"],
+        ("גלגל", "צמיג", "wheel", "tire", "גלגלים", "בורגי גלגל",
+         "מידת צמיג", "tire size", "לחץ", "tire pressure", "פנצ'ר"),
+        ["wheel_torque", "tire_size_front", "tire_pressure_front", "tire_pressure_rear"],
     ),
+    # ── נרות הצתה ────────────────────────────────────────────────────────────
     (
         ("נר", "spark", "נרות", "הצתה"),
         ["spark_plug_torque", "spark_plug_type", "spark_plug_gap"],
     ),
+    # ── בלמים ────────────────────────────────────────────────────────────────
     (
         ("בלמים", "brake", "דיסק", "רפידות", "כרית", "בלם"),
         ["brake_caliper_torque", "brake_fluid_type"],
     ),
+    # ── קירור ────────────────────────────────────────────────────────────────
     (
-        ("קירור", "coolant", "רדיאטור"),
-        ["coolant_type"],
+        ("קירור", "coolant", "רדיאטור", "אנטיפריז"),
+        ["coolant_type", "coolant_capacity_liters"],
+    ),
+    # ── מצבר ─────────────────────────────────────────────────────────────────
+    (
+        ("מצבר", "battery", "סוללה", "cca", "להתנעה", "din", "bci"),
+        ["battery_capacity_ah", "battery_cca", "battery_group_size"],
+    ),
+    # ── נורות — כל סוגי התאורה ───────────────────────────────────────────────
+    (
+        ("נורה", "נורות", "פנס", "bulb", "headlight", "ערפל", "פלאש", "תאורה", "light"),
+        [
+            "headlight_low_beam_bulb", "headlight_high_beam_bulb",
+            "fog_light_front_bulb", "rear_fog_light_bulb",
+            "turn_signal_front_bulb", "turn_signal_rear_bulb",
+            "brake_light_bulb", "backup_light_bulb",
+            "parking_light_bulb", "license_plate_bulb",
+            "interior_dome_bulb",
+        ],
+    ),
+    # ── נורות — מיפוי ספציפי לסוג ───────────────────────────────────────────
+    (
+        ("רוורס", "backup", "גיבוי", "reverse light", "back-up", "backup light"),
+        ["backup_light_bulb"],
     ),
     (
-        ("מצבר", "battery", "סוללה", "cca", "להתנעה"),
-        ["battery_capacity_ah", "battery_cca"],
+        ("פלאש אחורי", "rear turn signal", "rear blinker", "indicator rear"),
+        ["turn_signal_rear_bulb"],
     ),
     (
-        ("נורה", "נורות", "פנס", "bulb", "headlight", "ערפל", "פלאש", "תאורה"),
-        ["headlight_low_beam_bulb", "headlight_high_beam_bulb", "fog_light_front_bulb",
-         "turn_signal_front_bulb", "brake_light_bulb"],
+        ("לוחית רישוי", "license plate", "number plate"),
+        ["license_plate_bulb"],
+    ),
+    (
+        ("ערפל אחורי", "rear fog"),
+        ["rear_fog_light_bulb"],
+    ),
+    (
+        ("עמידה", "position light", "parking light", "נורת חניה"),
+        ["parking_light_bulb"],
+    ),
+    (
+        ("תאורה פנימית", "dome light", "dome bulb", "map light", "reading light", "גג", "פנים"),
+        ["interior_dome_bulb"],
+    ),
+    # ── מגבים ────────────────────────────────────────────────────────────────
+    (
+        ("מגב", "מגבים", "wiper", "windshield wiper", "מגב קדמי", "מגב אחורי"),
+        ["wiper_front_driver_mm", "wiper_front_passenger_mm", "wiper_rear_mm"],
+    ),
+    # ── מסנן אוויר מנוע ──────────────────────────────────────────────────────
+    (
+        ("מסנן אוויר", "air filter", "פילטר אוויר", "מסנן מנוע"),
+        ["engine_air_filter"],
+    ),
+    # ── מסנן קבינה / מזגן ────────────────────────────────────────────────────
+    (
+        ("מסנן קבינה", "מסנן מזגן", "cabin filter", "pollen filter",
+         "cabin air filter", "מסנן אוויר פנים", "מזגן מסנן"),
+        ["cabin_air_filter"],
     ),
 ]
 
