@@ -33,7 +33,8 @@ from rag import cache as db_cache  # שימוש ב-Supabase client של ה-cache
 _KEYWORD_TO_OPERATION: list[tuple[tuple[str, ...], str]] = [
     (("שמן", "oil", "מסנן שמן", "oil filter", "החלפת שמן", "פקק שמן"), "oil_change"),
     (("בלמים", "רפידות", "brake", "דיסק", "brake pad"), "brake_pad_replacement"),
-    (("מסנן אוויר", "air filter", "פילטר אוויר"), "air_filter"),
+    (("מסנן אוויר", "air filter", "פילטר אוויר", "מסנן מנוע"), "air_filter"),
+    (("מסנן קבינה", "מסנן מזגן", "cabin filter", "pollen filter", "מסנן אוויר פנים"), "cabin_filter"),
     (("נרות", "spark plug", "נר הצתה", "הצתה"), "spark_plug"),
     (("גלגל", "צמיג", "wheel", "tire", "גלגלים"), "tire_change"),
     (("סוללה", "מצבר", "battery"), "battery"),
@@ -48,17 +49,18 @@ _KEYWORD_TO_OPERATION: list[tuple[tuple[str, ...], str]] = [
 
 # שאילתות חיפוש לכל פעולה — עברית ואנגלית
 _OPERATION_QUERIES: dict[str, dict[str, str]] = {
-    "oil_change":             {"he": "החלפת שמן מנוע",             "en": "oil change DIY"},
-    "brake_pad_replacement":  {"he": "החלפת רפידות בלמים",          "en": "brake pad replacement DIY"},
-    "air_filter":             {"he": "החלפת מסנן אוויר",            "en": "air filter replacement DIY"},
-    "spark_plug":             {"he": "החלפת נרות הצתה",             "en": "spark plug replacement DIY"},
-    "tire_change":            {"he": "החלפת גלגל עצירת חירום",     "en": "tire change DIY"},
-    "battery":                {"he": "החלפת מצבר רכב",              "en": "car battery replacement DIY"},
-    "wiper":                  {"he": "החלפת מגבים",                 "en": "wiper blade replacement DIY"},
-    "bulb":                   {"he": "החלפת נורה",                  "en": "bulb replacement DIY"},
-    "stereo":                 {"he": "התקנת מסך מולטימדיה רכב",    "en": "car stereo head unit installation DIY"},
-    "dashcam":                {"he": "התקנת מצלמת דרך רכב",        "en": "dashcam installation DIY"},
-    "reverse_camera":         {"he": "התקנת מצלמת רוורס",          "en": "backup reverse camera installation DIY"},
+    "oil_change":             {"he": "החלפת שמן מנוע",             "en": "oil change"},
+    "brake_pad_replacement":  {"he": "החלפת רפידות בלמים",          "en": "brake pad replacement"},
+    "air_filter":             {"he": "החלפת מסנן אוויר",            "en": "air filter change"},
+    "cabin_filter":           {"he": "החלפת מסנן קבינה",            "en": "cabin filter change"},
+    "spark_plug":             {"he": "החלפת נרות הצתה",             "en": "spark plug replace"},
+    "tire_change":            {"he": "החלפת גלגל עצירת חירום",     "en": "tire change"},
+    "battery":                {"he": "החלפת מצבר רכב",              "en": "battery replace"},
+    "wiper":                  {"he": "החלפת מגבים",                 "en": "wiper change"},
+    "bulb":                   {"he": "החלפת נורה",                  "en": "bulb replacement"},
+    "stereo":                 {"he": "התקנת מסך מולטימדיה רכב",    "en": "car stereo install"},
+    "dashcam":                {"he": "התקנת מצלמת דרך רכב",        "en": "dashcam install"},
+    "reverse_camera":         {"he": "התקנת מצלמת רוורס",          "en": "backup camera install"},
 }
 
 _YT_KEY = os.getenv("YOUTUBE_API_KEY", "")
@@ -68,6 +70,7 @@ _OPERATION_TITLE_KEYWORDS: dict[str, tuple[str, ...]] = {
     "oil_change":            ("oil", "שמן", "filter", "מסנן", "lube"),
     "brake_pad_replacement": ("brake", "pad", "בלם", "רפידה", "disc", "rotor"),
     "air_filter":            ("air filter", "airfilter", "מסנן אוויר"),
+    "cabin_filter":          ("cabin", "pollen", "cabin filter", "cabin air", "מסנן קבינה"),
     "spark_plug":            ("spark", "plug", "נר", "ignition", "הצתה"),
     "tire_change":           ("tire", "wheel", "tyre", "צמיג", "גלגל"),
     "battery":               ("battery", "מצבר", "סוללה"),
@@ -378,20 +381,16 @@ def find_tutorial(vehicle: VehicleInfo, operation: str, raw_message: str = "") -
     if operation == "bulb":
         subtype = _extract_bulb_subtype(raw_message) if raw_message else "bulb"
         cache_operation = f"bulb_{subtype.replace(' ', '_')}"  # e.g. "bulb_reverse"
-        # שנה ראשונה + מרכאות סביב שם הדגם + "step by step" לאיתור מדויק
-        en_specific  = f'{year} {make} "{model}" {subtype} bulb replacement step by step'
-        en_fallback  = f'{make} "{model}" {subtype} bulb replacement'
-        en_fallback2 = f'how to replace {subtype} bulb {make} {model}'
+        # קצר ופשוט — DDG Video נכשל עם שאילתות ארוכות, מרכאות ו-LHD
+        en_specific  = f'{year} {make} {model} {subtype} bulb replacement'
+        en_fallback  = f'{make} {model} {subtype} bulb replacement'
+        en_fallback2 = f'{make} {model} {subtype} light replace'
     else:
         subtype = None
         cache_operation = operation
-        en_specific  = f'{year} {make} "{model}" {en_base} step by step'
-        en_fallback  = f'{make} "{model}" {en_base}'
+        en_specific  = f'{year} {make} {model} {en_base}'
+        en_fallback  = f'{make} {model} {en_base}'
         en_fallback2 = None
-
-    # לפעולות תלויות-צד: הוסף "LHD" לשאילתה הספציפית בלבד — fallback מכוון לרחב יותר
-    if operation in _SIDE_SPECIFIC_OPERATIONS:
-        en_specific = f"{en_specific} LHD"
 
     # לכל שפה: שאילתה ספציפית → fallback → fallback2
     # עברית קודמת — תוצאות ישראליות טבעיות

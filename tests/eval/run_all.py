@@ -13,6 +13,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
+# Windows cmd/PowerShell default to cp1252/cp1255 — force UTF-8 output
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 RESULTS_PATH = Path(__file__).parent / "results.md"
 
 
@@ -68,8 +72,8 @@ def main():
     sections = [
         f"# Jack RAG Eval Results\n",
         f"**Run date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}\n",
-        f"**Vehicles:** Toyota Yaris Hybrid 2019–2020, Kia Rio 2017–2024 (1.0T + 1.4)\n",
-        f"**Manuals:** 2 PDFs\n",
+        f"**Vehicles:** Kia Rio 2016 (G4FA 1.4)\n",
+        f"**Manuals:** 1 PDF\n",
     ]
 
     if run_all or args.retriever:

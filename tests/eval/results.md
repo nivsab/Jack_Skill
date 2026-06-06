@@ -1,10 +1,10 @@
 # Jack RAG Eval Results
 
-**Run date:** 2026-06-01 21:25
+**Run date:** 2026-06-07 00:12
 
-**Vehicles:** Toyota Yaris Hybrid 2019–2020, Kia Rio 2017–2024 (1.0T + 1.4)
+**Vehicles:** Kia Rio 2016 (G4FA 1.4)
 
-**Manuals:** 2 PDFs
+**Manuals:** 1 PDF
 
 
 ---
@@ -25,7 +25,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Total cases | 15 |
-| Recall@1 | **6.7%** |
-| Recall@3 | **13.3%** |
-| Recall@5 | **13.3%** |
+| Total cases | 10 |
+| Recall@1 | **90.0%** |
+| Recall@3 | **100.0%** |
+| Recall@5 | **100.0%** |
