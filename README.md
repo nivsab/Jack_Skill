@@ -121,7 +121,7 @@ Make sure Ollama is running before the next step.
 python rag/ingest.py data/manuals/<filename>.pdf
 ```
 
-This splits the PDF into chunks, generates embeddings locally via Ollama, and stores them in Supabase with pgvector indexing.
+The ingest pipeline uses `rag/extractor.py` to parse the PDF structure before chunking — detecting headings, tables, and section hierarchy, and prepending a breadcrumb path to each chunk (e.g. `Maintenance > Engine Oil > Capacity`). This preserves context that would otherwise be lost when splitting a structured manual into flat text chunks.
 
 ### 5. Register the manual
 

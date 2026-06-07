@@ -6,13 +6,15 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 -- ── doc_chunks: chunks ממדריכי יצרן + embeddings ─────────────────────────────
 CREATE TABLE IF NOT EXISTS doc_chunks (
-    id         bigserial PRIMARY KEY,
-    source     text    NOT NULL,
-    page       integer NOT NULL,
-    chunk_idx  integer NOT NULL DEFAULT 0,
-    chunk      text    NOT NULL,
-    embedding  vector(768),
-    created_at timestamptz DEFAULT now()
+    id          bigserial PRIMARY KEY,
+    source      text    NOT NULL,
+    page        integer NOT NULL,
+    chunk_idx   integer NOT NULL DEFAULT 0,
+    chunk       text    NOT NULL,
+    breadcrumbs text    NOT NULL DEFAULT '',
+    chunk_type  text    NOT NULL DEFAULT 'text',
+    embedding   vector(768),
+    created_at  timestamptz DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS doc_chunks_source_idx
@@ -107,15 +109,17 @@ CREATE OR REPLACE FUNCTION search_docs(
     match_count     int   DEFAULT 5
 )
 RETURNS TABLE (
-    id         bigint,
-    source     text,
-    page       integer,
-    chunk      text,
-    similarity float
+    id          bigint,
+    source      text,
+    page        integer,
+    chunk       text,
+    breadcrumbs text,
+    chunk_type  text,
+    similarity  float
 )
 LANGUAGE sql STABLE AS $$
     SELECT
-        id, source, page, chunk,
+        id, source, page, chunk, breadcrumbs, chunk_type,
         1 - (embedding <=> query_embedding) AS similarity
     FROM doc_chunks
     WHERE 1 - (embedding <=> query_embedding) > match_threshold
